@@ -13,3 +13,7 @@
 ## 1.0.1+1
 
 - Add NoDartLogger to override DartLogger with no print
+
+## 1.0.2+1
+
+- Add exemple and fix pubspec description

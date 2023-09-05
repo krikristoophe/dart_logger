@@ -113,10 +113,8 @@ class DartLogger {
     switch (configuration.format) {
       case LogFormat.inline:
         _logInline(level, message);
-        break;
       case LogFormat.json:
         _logJson(level, message);
-        break;
     }
   }
 
@@ -156,10 +154,8 @@ class DartLogger {
     switch (level.sink) {
       case StdSink.out:
         stdout.writeln(line);
-        break;
       case StdSink.err:
         stderr.writeln(line);
-        break;
     }
   }
 }
