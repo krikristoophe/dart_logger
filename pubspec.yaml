@@ -1,6 +1,6 @@
 name: easy_dart_logger
 description: A simple and easy to use pure dart logger compatible with dart and Flutter
-version: 1.0.2+1
+version: 1.0.3+1
 repository: https://github.com/krikristoophe/dart_logger.git
 
 environment:
@@ -14,3 +14,4 @@ dev_dependencies:
 
 dependencies:
   freezed_annotation: ^2.2.0
+  universal_io: ^2.2.2

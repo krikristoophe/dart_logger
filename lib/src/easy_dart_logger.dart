@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:easy_dart_logger/src/dart_logger_configuration.dart';
+import 'package:universal_io/io.dart';
 
 /// StdSink define the std output on which log will be printed
 enum StdSink {
@@ -11,6 +11,9 @@ enum StdSink {
   /// stderr
   err;
 }
+
+/// true is running on web platform
+const bool kIsWeb = bool.fromEnvironment('dart.library.js_util');
 
 /// Define differents levels available
 enum DartLoggerLevel {
@@ -151,6 +154,12 @@ class DartLogger {
 
   /// Write line to [level] std output
   void _writeLine(DartLoggerLevel level, String line) {
+    if (kIsWeb) {
+      // ignore: avoid_print
+      print(line);
+      return;
+    }
+
     switch (level.sink) {
       case StdSink.out:
         stdout.writeln(line);

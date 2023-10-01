@@ -17,3 +17,7 @@
 ## 1.0.2+1
 
 - Add exemple and fix pubspec description
+
+## 1.0.3+1
+
+- Fix dart:io exception on web platform
