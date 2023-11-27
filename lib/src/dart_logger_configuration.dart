@@ -17,8 +17,8 @@ enum LogFormat {
 class DartLoggerConfiguration with _$DartLoggerConfiguration {
   /// [format] and [name] are required
   const factory DartLoggerConfiguration({
-    required LogFormat format,
     required String name,
+    @Default(LogFormat.inline) LogFormat format,
   }) = _DartLoggerConfiguration;
 
   /// Default logger configuration is LogFormat.inline with current executable
@@ -26,7 +26,6 @@ class DartLoggerConfiguration with _$DartLoggerConfiguration {
   factory DartLoggerConfiguration.defaultConfiguration() {
     final String executableName = Platform.resolvedExecutable.split('/').last;
     return DartLoggerConfiguration(
-      format: LogFormat.inline,
       name: executableName,
     );
   }

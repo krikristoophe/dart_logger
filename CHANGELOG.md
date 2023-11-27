@@ -21,3 +21,7 @@
 ## 1.0.3+1
 
 - Fix dart:io exception on web platform
+
+## 1.0.4+1
+
+- Use log function to fix vscode debug console filter

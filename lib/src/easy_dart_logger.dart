@@ -1,16 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:easy_dart_logger/src/dart_logger_configuration.dart';
-import 'package:universal_io/io.dart';
-
-/// StdSink define the std output on which log will be printed
-enum StdSink {
-  /// stdout
-  out,
-
-  /// stderr
-  err;
-}
+import 'package:logging/logging.dart';
 
 /// true is running on web platform
 const bool kIsWeb = bool.fromEnvironment('dart.library.js_util');
@@ -18,27 +10,27 @@ const bool kIsWeb = bool.fromEnvironment('dart.library.js_util');
 /// Define differents levels available
 enum DartLoggerLevel {
   /// Error level is printed red on stderr
-  error._('\x1B[31m', StdSink.err),
+  error._('\x1B[31m', Level.SEVERE),
 
   /// Debug level is printed blue on stderr
-  debug._('\x1B[34m', StdSink.out),
+  debug._('\x1B[34m', Level.FINE),
 
   /// Warning level is printed yellow on stdout
-  warning._('\x1B[33m', StdSink.out),
+  warning._('\x1B[33m', Level.WARNING),
 
   /// Info level is printed green on stdout
-  info._('\x1B[32m', StdSink.out); // green - stdout
+  info._('\x1B[32m', Level.INFO); // green - stdout
 
   const DartLoggerLevel._(
     this.colorCode,
-    this.sink,
+    this.level,
   );
 
   /// Color code of level printing
   final String colorCode;
 
   /// Std output of message
-  final StdSink sink;
+  final Level level;
 
   @override
   String toString() {
@@ -50,16 +42,18 @@ enum DartLoggerLevel {
 class DartLogger {
   /// [configuration] define parameters of logger
   /// Default to `DartLoggerConfiguration.defaultConfiguration()`
-  DartLogger({
+  const DartLogger({
     DartLoggerConfiguration? configuration,
-  }) : configuration =
-            configuration ?? DartLoggerConfiguration.defaultConfiguration();
+  }) : _configuration = configuration;
+
+  final DartLoggerConfiguration? _configuration;
 
   /// Default global logger
-  static DartLogger global = DartLogger();
+  static DartLogger global = const DartLogger();
 
   /// Configuration of current logger
-  final DartLoggerConfiguration configuration;
+  DartLoggerConfiguration get configuration =>
+      _configuration ?? DartLoggerConfiguration.defaultConfiguration();
 
   /// Print Info [message]
   void info(dynamic message) {
@@ -82,23 +76,11 @@ class DartLogger {
   /// With json format, lines are in array with "stacktrace" key
   void error(dynamic message, [StackTrace? stackTrace]) {
     if (configuration.format == LogFormat.inline) {
-      final String date = DateTime.now().toIso8601String();
-      _logInline(
+      _log(
+        message,
         DartLoggerLevel.error,
-        message.toString(),
-        overrideDate: date,
+        stackTrace,
       );
-      if (stackTrace != null) {
-        final List<String> stacktraceLines =
-            stackTrace.toString().trim().split('\n');
-        for (final String line in stacktraceLines) {
-          _logInline(
-            DartLoggerLevel.error,
-            line,
-            overrideDate: date,
-          );
-        }
-      }
     } else {
       _logJson(
         DartLoggerLevel.error,
@@ -108,6 +90,17 @@ class DartLogger {
     }
   }
 
+  void _log(dynamic message, DartLoggerLevel level, [StackTrace? stackTrace]) {
+    final DateTime date = DateTime.now();
+    log(
+      '[${date.toIso8601String()}\t$level\t] $message',
+      stackTrace: stackTrace,
+      name: configuration.name,
+      time: date,
+      level: level.level.value,
+    );
+  }
+
   /// Dispatch logging to current LogFormat
   void _logMessage(
     DartLoggerLevel level,
@@ -115,21 +108,13 @@ class DartLogger {
   ) {
     switch (configuration.format) {
       case LogFormat.inline:
-        _logInline(level, message);
+        _log(
+          message,
+          level,
+        );
       case LogFormat.json:
         _logJson(level, message);
     }
-  }
-
-  /// Print inline [message]
-  void _logInline(
-    DartLoggerLevel level,
-    String message, {
-    String? overrideDate,
-  }) {
-    final String now = overrideDate ?? DateTime.now().toIso8601String();
-    final String printedLine = '[$now\t$level\t${configuration.name}] $message';
-    _writeLine(level, printedLine);
   }
 
   /// Print json message
@@ -149,22 +134,6 @@ class DartLogger {
 
     final String printedLine = jsonEncode(printedJson);
 
-    _writeLine(level, printedLine);
-  }
-
-  /// Write line to [level] std output
-  void _writeLine(DartLoggerLevel level, String line) {
-    if (kIsWeb) {
-      // ignore: avoid_print
-      print(line);
-      return;
-    }
-
-    switch (level.sink) {
-      case StdSink.out:
-        stdout.writeln(line);
-      case StdSink.err:
-        stderr.writeln(line);
-    }
+    log(printedLine);
   }
 }
