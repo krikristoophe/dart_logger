@@ -1,5 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:easy_dart_logger/easy_dart_logger.dart';
 
 void main() {
@@ -73,8 +71,11 @@ void main() {
   Result :
 
   {"timestamp":"2023-05-15T02:36:16.706902","name":"loggerJson","level":"error","message":"error","stacktrace":["#0      main (file:///Users/christophesonneville/dev/devac/dart_logger/example/dart_logger_example.dart:42:40)","#1      _delayEntrypointInvocation.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:297:19)","#2      _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:192:26)"]}
-  {"timestamp":"2023-05-15T02:36:16.708224","name":"loggerJson","level":"debug","message":"debug"}
-  {"timestamp":"2023-05-15T02:36:16.708274","name":"loggerJson","level":"info","message":"info"}
-  {"timestamp":"2023-05-15T02:36:16.708304","name":"loggerJson","level":"warning","message":"true"}
+  {"timestamp":"2023-05-15T02:36:16.708224","name":"loggerJson","level":"debug",
+    "message":"debug"}
+  {"timestamp":"2023-05-15T02:36:16.708274","name":"loggerJson","level":"info",
+    "message":"info"}
+  {"timestamp":"2023-05-15T02:36:16.708304","name":"loggerJson",
+    "level":"warning", "message":"true"}
   */
 }

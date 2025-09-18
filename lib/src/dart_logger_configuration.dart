@@ -14,7 +14,7 @@ enum LogFormat {
 
 /// DartLoggerConfiguration contains logger configuration
 @freezed
-class DartLoggerConfiguration with _$DartLoggerConfiguration {
+sealed class DartLoggerConfiguration with _$DartLoggerConfiguration {
   /// [format] and [name] are required
   const factory DartLoggerConfiguration({
     required String name,
