@@ -25,3 +25,7 @@
 ## 1.0.4+1
 
 - Use log function to fix vscode debug console filter
+
+## 1.1.0+1
+
+- Update all dependencies to the latest version
